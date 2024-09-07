@@ -8,14 +8,25 @@ const Dashboard = () => {
         id: 1,
         name: "CSPM Executive Dashboard",
         widgets: [
-          { id: 101, name: "Widget 1", text: "Sample text for Widget 1" },
-          { id: 102, name: "Widget 2", text: "Sample text for Widget 2" }
+          { id: 101, name: "Cloud Accounts", text: "Total: 2\nConnected: 2\nNot Connected: 2" },
+          { id: 102, name: "Cloud Account Risk Assessment", text: "Total: 9859\nFailed: 1069\nWarning: 881" }
         ]
       },
       {
         id: 2,
-        name: "Operations Dashboard",
-        widgets: [{ id: 201, name: "Widget 3", text: "Sample text for Widget 3" }]
+        name: "CWPP Dashboard",
+        widgets: [
+          { id: 201, name: "Top 5 Namespace Specific Alerts", text: "No Graph data available" },
+          { id: 202, name: "Workload Alerts", text: "No Graph data available" }
+        ]
+      },
+      {
+        id: 3,
+        name: "Registry Scan",
+        widgets: [
+          { id: 301, name: "Image Risk Assessment", text: "1470 Total Vulnerabilities\nCritical: 10\nHigh: 560" },
+          { id: 302, name: "Image Security Issues", text: "2 Total Images\nCritical: 2\nHigh: 6" }
+        ]
       }
     ]
   });
@@ -59,27 +70,41 @@ const Dashboard = () => {
   }));
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Search Widgets..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      {filteredWidgets.map((category) => (
-        <div key={category.id}>
-          <h3>{category.name}</h3>
-          {category.widgets.map((widget) => (
-            <div key={widget.id} style={{ display: "flex", alignItems: "center" }}>
-              <h4>{widget.name}</h4>
-              <p>{widget.text}</p>
-              <button onClick={() => removeWidget(category.id, widget.id)}>✖</button>
-            </div>
-          ))}
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <input
+          type="text"
+          placeholder="Search anything..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-bar"
+        />
+        <div className="time-filter">
+          <button className="time-button">Last 2 days</button>
         </div>
-      ))}
+      </div>
 
-      <div>
+      <div className="dashboard-grid">
+        {filteredWidgets.map((category) => (
+          <div key={category.id} className="category">
+            <h3>{category.name}</h3>
+            <div className="category-grid">
+              {category.widgets.map((widget) => (
+                <div key={widget.id} className="widget">
+                  <h4>{widget.name}</h4>
+                  <p>{widget.text}</p>
+                  <button className="remove-widget" onClick={() => removeWidget(category.id, widget.id)}>✖</button>
+                </div>
+              ))}
+              <div className="widget add-widget">
+                <button onClick={() => addWidget()}>+ Add Widget</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="add-widget-form">
         <h3>Add a New Widget</h3>
         <select
           value={newWidget.categoryId}
